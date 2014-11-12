@@ -1,3 +1,4 @@
+
 colors = require 'colors'
 _ = require 'underscore'
 _.str = require 'underscore.string'
@@ -43,11 +44,11 @@ createFeature = (options)->
 			feature = 'Feature: '+feature
 
 		if 'whitespace' in options
-			feature = feature+'\n'
+			feature = feature
 
 		if 'style' in options
 			feature = feature.green.underline.bold
-			
+
 		message = feature+'\n'
 		unless typeof story[0] is 'function'
 			(message += '\t'+part+'\n' for part in story)
@@ -99,12 +100,17 @@ exports.Scenario = createScenario(['whitespace', 'label', 'style'])
 
 describeItNest = (command, message, callback, options)->  # nest commands inside a Describe so mixed describe/its will line up on spec output.
 	label = nestLabel options  # get pretty labels for nest.
-	mocha.describe label, ->
+	if message.substring(0, 'Scenario'.length) == 'Scenario'
+		mocha.describe '', ->
+			if command == 'it'
+				mocha.it message, callback
+			else
+				mocha.describe message, callback
+	else
 		if command == 'it'
 			mocha.it message, callback
 		else
-			mocha.describe '', ->
-				mocha.describe message, callback
+			mocha.describe message, callback
 
 nestLabel = (options)->  # returns label of nested describes/its
 	label = ''
@@ -119,7 +125,8 @@ nestLabel = (options)->  # returns label of nested describes/its
 	if SPEC_REPORTER == 'doc'
 		label = ''
 
-	return label
+	label = ''
+	return ''
 
 isPending = (command, message, cb)->  # Return Pending message.
 	if not cb or cb.toString() == (->).toString()  # If Blank
@@ -130,13 +137,12 @@ isPending = (command, message, cb)->  # Return Pending message.
 
 gwtItDescribe = (label, message, callback, options)->  # routes command to a Describe or an It
 	# If it's not passed a message, it'll be describe.
+	command = 'describe'
 	if typeof message == 'function'
 		callback = message
 		message = label
-		command = 'describe'
-	else  # It's an it
+	else
 		message = label+message
-		command = 'it'
 
 	[command, message, callback] = isPending(command, message, callback)
 
@@ -155,6 +161,10 @@ gwtLabel = (label, options)->  # Returns pretty GWTab labels
 				label = label.grey
 			else if 'white' in options
 				label = label.white
+			else if 'red' in options
+				label = label.red
+			else if 'cyan' in options
+				label = label.cyan
 			else
 				label = label.yellow
 	else
@@ -169,9 +179,9 @@ exports.When = createGWTab(' When: ', ['label', 'style'])
 
 exports.Then = createGWTab(' Then: ', ['label', 'style'])
 
-exports.And = createGWTab('  And: ', ['label', 'style', 'dark'])
+exports.And = createGWTab('  And: ', ['label', 'style', 'cyan', 'bold'])
 
-exports.But = createGWTab('  But: ', ['label', 'style', 'dark'])
+exports.But = createGWTab('  But: ', ['label', 'style', 'red', 'bold'])
 
 exports.I = createGWTab('  I ', ['label', 'style', 'white'])
 

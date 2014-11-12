@@ -1,4 +1,18 @@
-# What is it?        
+#The purpose of this fork
+Originally written by [@quangv](https://github.com/quangv/mocha-cakes), mocha-cakes allows mocha tests to be more descriptive of their respective suites.  However,
+
+  1. mocha-cakes was no longer working properly
+  2. mocha-cakes was too inflexibile
+  3. mocha-cakes was dead (no contribs. for 2 years)
+
+I forked this repo so that I could work off of what [@quangv](https://github.com/quangv/mocha-cakes) had started so that I could write more descriptive BDD-style tests.
+
+##Todo list:
+  1. More carefully update readme
+  2. Get rid of coffeescript
+  3. Allow for more stylistic options
+
+# What is it?
 
 [Gherkin](https://github.com/cucumber/cucumber/wiki/Gherkin)-[Cucumber](http://cukes.info/) syntax add-on for [mocha](https://github.com/visionmedia/mocha) javascript/node test framework for customer acceptance testing.
 
@@ -27,28 +41,14 @@ Mocha-Cakes adds the following commands:
 You can use these commands to describe your tests & specs, as well as mocha's BDD commands `describe`, `it`, `before`, `beforeEach`, `after`, `afterEach` OR mocha's TDD commands `suite`, `test`, `setup`, `teardown`, `suiteSetup`, `suiteTeardown`
 
 # Mocha-Cakes Commands Breakdown
-  
+
   Mocha-Cakes extends Mocha, by adding on helpful commands and print-outs for Acceptance Tests. (Given, When, Then, etc.)
 
 ##Acceptance Tests
 
-`Feature`, `Scenario`  (maps to _describe_)
+As of this fork, all of the above commands map to _describe_
 
-`Given`, `When`, `Then` (maps to _it_, but if first message argument is ommited, it'll be a _describe_)
-
-`And`, `But`, `I` (maps to _it_ but if first message argument is ommited, it'll be a _describe_)
-
-### GWTab
-  GWTab commands can map to a describe if the message argument is ommited.
-
-  ```coffeescript
-    Given 'I am at home', ->  # it's an it
-      home.should.eql 'home'
-
-    Given ->  # it's a describe
-      it 'is dark', ->
-        outside.should.eql 'dark'
-  ```
+The only command that maps to _it_ is _it_ itself
 
 ## Grey-Box, System Tests
 
@@ -88,7 +88,7 @@ Then ->
 
 # Example
 
-_Coffee-Script: test.coffee_ 
+_Coffee-Script: test.coffee_
 
 ```coffeescript
 
@@ -110,16 +110,16 @@ Feature "New Feature",
         voice.should.eql 'good'
 
 ```
- 
+
 Run this test using mocha command:
 
 `mocha test.coffee -R spec -r should --compilers coffee:coffee-script`
 
 # What's going on?
 
-Mocha-cakes gives you access to function names 
+Mocha-cakes gives you access to function names
 
-_"Feature", "Scenario"_ that wraps around mocha's `describe()`. 
+_"Feature", "Scenario"_ that wraps around mocha's `describe()`.
 
 _"Given", "When", "Then", "And", "But"_ wraps around mocha's `it()`. (If first argument is omitted `Given ->` it'll be a `describe()`)
 
@@ -128,17 +128,17 @@ Also bonus, "Describe" wraps around mocha's _describe()_ also, that could be use
 So the above would output something like:
 
 ```cucumber
-  Feature: New Feature 
+  Feature: New Feature
 
   In order to use cool feature
   as a new user
   I want do include this
-    
+
     Scenario: Singing
       ✓ Given: I am a good singing
       ✓ When: I sing
       ✓ Then: it should sound good
-        ✓ sound good  
+        ✓ sound good
 
 
   ✔ 1 tests complete (3ms)
